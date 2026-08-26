@@ -1,10 +1,11 @@
+import type { UnknownObject } from '@scalar/types/utils'
 import Ajv, { type ValidateFunction } from 'ajv'
 import Ajv2020 from 'ajv/dist/2020.js'
 import Ajv04 from 'ajv-draft-04'
 import addFormats from 'ajv-formats'
 
 import { ERRORS, OpenApiSpecifications, type OpenApiVersion, OpenApiVersions } from '@/configuration'
-import type { Filesystem, OpenApiDocument, ThrowOnErrorOption, UnknownObject, ValidationOutcome } from '@/types/index'
+import type { Filesystem, OpenApiDocument, ThrowOnErrorOption, ValidationOutcome } from '@/types/index'
 import { details as getOpenApiVersion } from '@/utils/details'
 import { resolveReferences } from '@/utils/resolve-references'
 import { transformErrors } from '@/utils/transform-errors'

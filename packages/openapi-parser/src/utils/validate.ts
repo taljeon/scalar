@@ -1,12 +1,8 @@
-import { Validator } from '@/lib/Validator/Validator'
+import type { UnknownObject } from '@scalar/types/utils'
+
 import type { OpenApiVersion } from '@/configuration'
-import type {
-  Filesystem,
-  StrictOpenApiDocument,
-  ThrowOnErrorOption,
-  UnknownObject,
-  ValidateResult,
-} from '@/types/index'
+import { Validator } from '@/lib/Validator/Validator'
+import type { Filesystem, StrictOpenApiDocument, ThrowOnErrorOption, ValidateResult } from '@/types/index'
 
 import { makeFilesystem } from './make-filesystem'
 
