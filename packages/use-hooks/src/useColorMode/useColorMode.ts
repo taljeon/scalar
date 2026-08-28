@@ -1,3 +1,4 @@
+import { type DarkLightMode, applyColorMode, getSystemColorMode } from '@scalar/helpers/theme/color-mode'
 import { literal, union, validate } from '@scalar/validation'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
@@ -18,10 +19,9 @@ const systemPreference = ref<DarkLightMode>('light')
 const colorModeSchema = union([literal('system'), literal('dark'), literal('light')])
 
 /** Possible color modes */
-type ColorMode = 'light' | 'dark' | 'system'
+export type ColorMode = 'light' | 'dark' | 'system'
 
-/** Specific dark/light mode */
-type DarkLightMode = 'light' | 'dark'
+export type { DarkLightMode }
 
 /**
  * A composable hook that provides color mode (dark/light) functionality.
@@ -59,14 +59,7 @@ export function useColorMode(
 
   /** Gets the system mode preference. */
   function getSystemModePreference(): DarkLightMode {
-    if (typeof window === 'undefined') {
-      return 'light'
-    }
-    if (typeof window?.matchMedia !== 'function') {
-      return 'dark'
-    }
-
-    return window?.matchMedia('(prefers-color-scheme: dark)')?.matches ? 'dark' : 'light'
+    return getSystemColorMode()
   }
 
   /** Writable computed ref for dark/light mode with system preference applied */
@@ -88,7 +81,7 @@ export function useColorMode(
    * `<html>` as an inline style — what the stylesheet's `light-dark()` tokens resolve against, and
    * a property rather than a class so nothing can be coupled to it.
    */
-  function applyColorMode(): void {
+  function applyBodyColorMode(): void {
     if (typeof document === 'undefined' || typeof window === 'undefined') {
       return
     }
@@ -97,13 +90,8 @@ export function useColorMode(
     // the body class agrees with `darkLightMode`/the toggle before `onMounted` resolves the real value.
     const classMode = overrideColorMode ?? (colorMode.value === 'system' ? systemPreference.value : colorMode.value)
 
-    if (classMode === 'dark') {
-      document.body.classList.add('dark-mode')
-      document.body.classList.remove('light-mode')
-    } else {
-      document.body.classList.add('light-mode')
-      document.body.classList.remove('dark-mode')
-    }
+    // An `overrideColorMode` of `system` reaches here unresolved, and has always rendered as light.
+    applyColorMode(classMode === 'dark' ? 'dark' : 'light')
 
     // The requested mode, not the resolved one: `system` clears the pin so the stylesheet's
     // `color-scheme: light dark` takes over and the OS drives the theme natively.
@@ -126,7 +114,7 @@ export function useColorMode(
 
   // Watch for color mode or system preference changes and update the body class. Watching
   // `systemPreference` means resolving it in `onMounted` (or an OS theme change) re-applies the class.
-  watch([colorMode, systemPreference], applyColorMode, { immediate: true })
+  watch([colorMode, systemPreference], applyBodyColorMode, { immediate: true })
 
   const handleChange = () => {
     systemPreference.value = getSystemModePreference()
