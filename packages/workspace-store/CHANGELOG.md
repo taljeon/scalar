@@ -1,5 +1,11 @@
 # @scalar/workspace-store
 
+## 0.59.1
+
+### Patch Changes
+
+- [#10046](https://github.com/scalar/scalar/pull/10046): Stop sending optional form-body properties by default. Optional `multipart/form-data` and `application/x-www-form-urlencoded` properties now start unchecked and are left out of the request unless you enable them, matching how optional parameters already behave. Required properties are unaffected.
+
 ## 0.59.0
 
 ### Minor Changes

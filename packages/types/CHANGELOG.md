@@ -1,5 +1,7 @@
 # @scalar/types
 
+## 0.18.4
+
 ## 0.18.3
 
 ### Patch Changes
